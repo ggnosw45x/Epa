@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from Plugins.db_lock import db_lock
 from Plugins.Func import connect_to_db
 from datetime import datetime
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
@@ -49,8 +50,9 @@ def process_template_selection(client, message: Message, template_name, days, cr
     template_dir = os.path.join(base_dir)
     random_code = generate_key(days)
 
-    conn = connect_to_db()
-    cursor = conn.cursor()
+    with db_lock:
+        conn = connect_to_db()
+        cursor = conn.cursor()
     cursor.execute('INSERT INTO keys (key, status, user_claim, days, generate_by, creditos) VALUES (?, ?, ?, ?, ?, ?)',
                    (random_code, 'LIVE', "", days, chat_id, creditos))
 
@@ -129,8 +131,9 @@ def process_template_selection(client, message: Message, template_name, days, cr
 @Client.on_message(filters.command("key", prefixes=['.','/','!','?'], case_sensitive=False) & filters.text)
 def generate_key_command(client, message: Message):
     user_id = message.from_user.id
-    conn = connect_to_db()
-    cursor = conn.cursor()
+    with db_lock:
+        conn = connect_to_db()
+        cursor = conn.cursor()
     cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
     result = cursor.fetchone()[0]
     username = message.from_user.username
@@ -200,8 +203,9 @@ from Plugins.Func import connect_to_db
 @Client.on_message(filters.command(["start", "cmds"], prefixes=['.', '/', '!', '?'], case_sensitive=False) & filters.text)
 def cmds(client, message):
     user_id = message.from_user.id
-    conn = connect_to_db()
-    cursor = conn.cursor()
+    with db_lock:
+        conn = connect_to_db()
+        cursor = conn.cursor()
     cursor.execute('SELECT rango, creditos, antispam, dias FROM users WHERE user_id = ?', (user_id,))
     user_data = cursor.fetchone()
     if not user_data:
@@ -259,8 +263,9 @@ Dev By: @AstraxOficial
 @Client.on_callback_query()
 def handle_buttons(client, callback_query):
     user_id = callback_query.from_user.id
-    conn = connect_to_db()
-    cursor = conn.cursor()
+    with db_lock:
+        conn = connect_to_db()
+        cursor = conn.cursor()
     
     cursor.execute('SELECT rango, creditos, antispam, dias, fecha_registro FROM users WHERE user_id = ?', (user_id,))
     user_data = cursor.fetchone()
@@ -281,7 +286,8 @@ def handle_buttons(client, callback_query):
 
     if data1 == "template_3":
         user_id = callback_query.from_user.id
-        conn = connect_to_db()
+        with db_lock:
+            conn = connect_to_db()
         cursor = conn.cursor()
         cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
         result = cursor.fetchone()[0]
@@ -297,7 +303,8 @@ def handle_buttons(client, callback_query):
 
     elif data1 == "template_7":
         user_id = callback_query.from_user.id
-        conn = connect_to_db()
+        with db_lock:
+            conn = connect_to_db()
         cursor = conn.cursor()
         cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
         result = cursor.fetchone()[0]
@@ -313,7 +320,8 @@ def handle_buttons(client, callback_query):
         
     elif data1 == "template_15":
         user_id = callback_query.from_user.id
-        onn = connect_to_db()
+        with db_lock:
+            conn = connect_to_db()
         cursor = conn.cursor()
         cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
         result = cursor.fetchone()[0]
@@ -330,7 +338,8 @@ def handle_buttons(client, callback_query):
         
     elif data1 == "template_30":
         user_id = callback_query.from_user.id
-        conn = connect_to_db()
+        with db_lock:
+            conn = connect_to_db()
         cursor = conn.cursor()
         cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
         result = cursor.fetchone()[0]
@@ -346,7 +355,8 @@ def handle_buttons(client, callback_query):
         
     elif data1 == "template_99":
         user_id = callback_query.from_user.id
-        conn = connect_to_db()
+        with db_lock:
+            conn = connect_to_db()
         cursor = conn.cursor()
         cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
         result = cursor.fetchone()[0]
