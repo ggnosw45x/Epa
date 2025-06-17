@@ -7,6 +7,7 @@ import cv2
 import datetime
 import cv2
 import pyrogram
+from Plugins.db_lock import db_lock
 from Plugins.Func import connect_to_db
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
@@ -28,9 +29,10 @@ keyboard = InlineKeyboardMarkup(
     
 @Client.on_message(filters.photo & filters.private)
 def oauto_claim_handler(client, message: Message):
-    conn = connect_to_db()
+    with db_lock:
+        conn = connect_to_db()
     user_id = message.from_user.id
-    cursor = conn.cursor()
+        cursor = conn.cursor()
     current_time = datetime.datetime.now().timestamp()
     # Verifica si el usuario ya es Premium
     cursor.execute('SELECT rango FROM users WHERE user_id = ?', (user_id,))
@@ -164,6 +166,5 @@ def detect_qr_code_in_gif(gif_path):
         pass
 
     return None
-
 
 

@@ -4,6 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import re
 from pyrogram.types import CallbackQuery
 from datetime import datetime
+from Plugins.db_lock import db_lock
 from Plugins.Func import connect_to_db
 from func_bin import get_bin_info
 from func_gen import cc_gen
@@ -13,8 +14,9 @@ from func_gen import cc_gen
 def gen_handler(client, message):
     tiempo = time.time()
     user_id = message.from_user.id
-    conn = connect_to_db()
-    cursor = conn.cursor()
+    with db_lock:
+        conn = connect_to_db()
+        cursor = conn.cursor()
     cursor.execute('SELECT rango, creditos, antispam, dias FROM users WHERE user_id = ?', (user_id,))
     user_data = cursor.fetchone()
     if not user_data:
@@ -126,5 +128,4 @@ def gen_handler(client, message):
 [<a href="https://t.me/RefeDarwinScrapper">✯</a>] OWNER BOT: @luisabinader1 </b>
 """, reply_markup=buttons, disable_web_page_preview=True)
    
-
 

@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from Plugins.db_lock import db_lock
 from Plugins.Func import connect_to_db
 import asyncio
 import random
@@ -8,8 +9,9 @@ footer_banner1 = 'https://imgur.com/llb5G2P.jpg'
 
 
 async def obtener_ids_usuarios():
-    conn = connect_to_db()
-    cursor = conn.cursor()
+    with db_lock:
+        conn = connect_to_db()
+        cursor = conn.cursor()
     query = "SELECT user_id FROM users"
     cursor.execute(query)
     resultados = cursor.fetchall()
