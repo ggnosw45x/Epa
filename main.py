@@ -1,8 +1,7 @@
 #----- LIBRERIAS------#
-import os
+
 import logging
 from pyrogram import Client
-from dotenv import load_dotenv
 import asyncio
 from Plugins.Func import connect_to_db
 from datetime import datetime
@@ -15,14 +14,15 @@ async def calculate_remaining_days(fecha_registro, dias):
     remaining_days = remaining_seconds / (24 * 60 * 60)
     return remaining_days
 
-
+API_ID = 16650069
+BOT_TOKEN = "7586600726:AAG5aNbZfQNOzRhJhGqgCsB4ScMeNKNJhKA"
+API_HASH = 'a4373bc737d0c78881d48dd62eed7268'
 #---CLIENTE----#
-config = load_dotenv(".env")
 KuramaChk = Client(
     "KuramaChk",
-    api_id = os.getenv('API_ID'),
-    api_hash = os.getenv('API_HASH'),
-    bot_token = os.getenv('BOT_TOKEN'),
+    api_id=API_ID
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
     plugins = dict(root = 'Plugins')
 )
 
