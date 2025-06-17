@@ -20,7 +20,7 @@ API_HASH = 'a4373bc737d0c78881d48dd62eed7268'
 #---CLIENTE----#
 KuramaChk = Client(
     "KuramaChk",
-    api_id=API_ID
+    api_id=API_ID,
     api_hash=API_HASH,
     bot_token=BOT_TOKEN,
     plugins = dict(root = 'Plugins')
